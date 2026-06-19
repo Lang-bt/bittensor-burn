@@ -1,0 +1,109 @@
+name: Build wheels
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload_to_pypi:
+        description: Upload compiled wheels to PyPI (Trusted Publishing)
+        type: boolean
+        default: false
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build_wheels:
+    name: wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build wheels with cibuildwheel
+        uses: pypa/cibuildwheel@v3.4.1
+
+      - name: Add install instructions
+        shell: bash
+        run: |
+          cat > wheelhouse/INSTALL.txt <<'EOF'
+          Install bittensor-burn-message (do not pick a .whl by hand).
+
+          Cloned repo: copy these .whl files into dist/, then from repo root:
+            python scripts/install.py
+            pip install bittensor-burn-message --no-index --find-links dist
+
+          Standalone folder: cd into this folder, then:
+            pip install bittensor-burn-message --no-index --find-links .
+
+          pip selects the wheel for your OS, CPU, and Python version automatically.
+          Then run:  bittensor-burn-message install --help
+          EOF
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}
+          path: wheelhouse/*
+
+  merge_wheels:
+    name: Merge all wheels
+    needs: build_wheels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all wheels
+        uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          path: dist
+          merge-multiple: true
+
+      - name: List wheels
+        run: ls -la dist/
+
+      - name: Add install instructions
+        run: |
+          cat > dist/INSTALL.txt <<'EOF'
+          Install bittensor-burn-message (do not pick a .whl by hand).
+
+          Cloned repo: copy these .whl files into dist/, then from repo root:
+            python scripts/install.py
+            pip install bittensor-burn-message --no-index --find-links dist
+
+          Standalone folder: cd into this folder, then:
+            pip install bittensor-burn-message --no-index --find-links .
+
+          pip selects the wheel for your OS, CPU, and Python version automatically.
+          Then run:  bittensor-burn-message install --help
+          EOF
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: all-wheels
+          path: dist/*
+          retention-days: 30
+
+  upload_pypi:
+    name: Upload to PyPI
+    needs: merge_wheels
+    if: github.event_name == 'workflow_dispatch' && inputs.upload_to_pypi
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Download all wheels
+        uses: actions/download-artifact@v4
+        with:
+          name: all-wheels
+          path: dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist

@@ -1,0 +1,11 @@
+bittensor_burn_message.pidbittensor_burn_message.daemon.log
+__pycache__/
+*.egg-info/
+build/
+*.c
+*.so
+*.pyd
+bittensor_burn_message/*.c
+bittensor_burn_message/*.html
+.venv/
+.env

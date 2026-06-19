@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61", "wheel", "cython>=3.0,<4"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bittensor-burn-message"
+version = "1.0.2"
+description = "Bittensor subnet burn monitoring and Telegram alerts"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+license = { file = "LICENSE" }
+authors = [{name = "bittensor-burn-message contributors"}]
+keywords = ["bittensor", "subnet", "burn", "emission", "telegram", "monitor", "tao"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: System :: Monitoring",
+    "Topic :: Utilities",
+]
+
+[project.scripts]
+bittensor-burn-message = "bittensor_burn_message:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bittensor_burn_message*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+bittensor_burn_message = ["env.example"]
+
+[tool.setuptools.exclude-package-data]
+bittensor_burn_message = ["*.pyx", "*.c", "*.h"]
+
+[tool.cibuildwheel]
+build = "cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
+skip = ["*-musllinux_*", "pp*", "cp37-*", "cp38-*", "cp31?t-*"]
+test-skip = "*"
+build-frontend = "build"

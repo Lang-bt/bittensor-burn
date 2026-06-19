@@ -1,0 +1,6 @@
+include LICENSE
+include pyproject.toml
+include README.md
+recursive-include bittensor_burn_message *.pyx
+recursive-include bittensor_burn_message env.example
+global-exclude *.py[cod] *.so *.pyd *.c *.h
