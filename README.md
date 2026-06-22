@@ -114,6 +114,7 @@ python3 -m bittensor_burn_message status
 bittensor-burn-message install \
   --telegram_token TOKEN \
   --telegram_chat_id CHAT_ID \
+  --taostats_api_key KEY \
   --interval MINUTES \
   --threshold DELTA
 bittensor-burn-message wake                # start daemon when auto-start is installed but not running

@@ -1,0 +1,11 @@
+Install bittensor-burn-message (do not pick a .whl by hand).
+
+Cloned repo: copy these .whl files into dist/, then from repo root:
+  python scripts/install.py
+  pip install bittensor-burn-message --no-index --find-links dist
+
+Standalone folder: cd into this folder, then:
+  pip install bittensor-burn-message --no-index --find-links .
+
+pip selects the wheel for your OS, CPU, and Python version automatically.
+Then run:  bittensor-burn-message install --help
