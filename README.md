@@ -7,10 +7,11 @@
 
 Monitor **Bittensor subnet owner burn rates** and receive **Telegram alerts** when burn changes beyond your threshold. Runs as a background daemon on **Windows, Linux, and macOS** with optional login auto-start.
 
+This repository ships the `bittensor-burn-message` CLI: a lightweight watcher for subnet owner burn economics, not a validator or wallet tool. It reads public Taostats data, compares each poll to your last snapshot, and notifies you only when a subnet's burn moves more than your configured delta.
+
 [Taostats](https://taostats.io/) • [Bittensor docs](https://docs.learnbittensor.org)
 
 ---
-
 ## Table of contents
 
 - [Overview](#overview)
